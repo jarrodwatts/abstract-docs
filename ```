@@ -4,15 +4,12 @@
 
 This document outlines the recent updates made to the Abstract Global Wallet SDK, including changes to the `signTransaction` functionality and the `agwProvider` configuration. These updates enhance the SDK's performance and usability, ensuring a smoother experience for developers.
 
-## Recent Changes
+## Changes Summary
 
-### 1. Changes to `signTransaction`
-
-#### Overview
-
-The `signTransaction` function has been updated to handle cases where the transaction data is undefined. This change prevents serialization issues when sending Ethereum transactions to contracts that do not have a fallback function.
+### 1. Enhancements to `signTransaction`
 
 #### Code Changes
+In the `signTransaction.ts` file, we introduced a safeguard for the `data` field in the transaction object. If the `data` is `undefined`, it is now explicitly set to `'0x'`. This change prevents issues when sending ETH to contracts that do not have a fallback function, which previously resulted in serialization to `0x00`.
 
 ```typescript
 if (transactionWithPaymaster.data === undefined) {
@@ -23,75 +20,62 @@ if (transactionWithPaymaster.data === undefined) {
 ```
 
 #### Practical Example
+When using the `signEip712TransactionInternal` function, ensure that the `data` field is correctly set. Here’s an example of how to call this function:
 
-When using the `signTransaction` function, ensure that the `data` field is correctly set. If it is undefined, the function will now automatically set it to `'0x'`, preventing potential issues with contract interactions.
+```javascript
+const transaction = {
+    // other transaction parameters
+    data: undefined, // This will now be handled correctly
+};
+
+const signedTransaction = await signEip712TransactionInternal(transaction);
+```
 
 ### 2. Updates to `agwProvider`
 
-#### Overview
-
-The `agwProvider` interface has been modified to make the `queryClient` property optional. This change allows for greater flexibility in configuring the provider, enabling developers to use it without necessarily providing a `QueryClient`.
-
 #### Code Changes
+In the `agwProvider.tsx` file, the `queryClient` property has been made optional. This allows developers to instantiate the provider without necessarily providing a `QueryClient`, enhancing flexibility in usage.
 
 ```typescript
 interface AbstractWalletConfig {
-    /**
-     * @type {QueryClient}
-     * @default new QueryClient()
-     */
     queryClient?: QueryClient; // Now optional
 }
 ```
 
 #### Practical Example
+When configuring the `agwProvider`, you can now omit the `queryClient` if it's not needed:
 
-When initializing the `agwProvider`, you can now choose to omit the `queryClient` if it is not needed:
+```javascript
+import { AgwProvider } from '@abstract-foundation/agw-react';
 
-```typescript
-const provider = new AgwProvider({
-    // queryClient is optional
-});
+const App = () => (
+    <AgwProvider>
+        {/* Your application components */}
+    </AgwProvider>
+);
 ```
 
-## Changelog
+## Version Updates
 
-### @abstract-foundation/agw-client
+### `@abstract-foundation/agw-client`
+- **Version**: Updated from `1.4.0` to `1.4.2`
+- **Changes**:
+  - Fixed undefined data in transactions.
+  - Updated dependencies.
 
-- **Version 1.4.2**
-  - Updated dependencies
-- **Version 1.4.1**
-  - Fixed undefined data in transaction serialization
+### `@abstract-foundation/agw-react`
+- **Version**: Updated from `1.5.1` to `1.5.4`
+- **Changes**:
+  - Made `queryClient` optional.
+  - Updated dependencies.
 
-### @abstract-foundation/agw-react
-
-- **Version 1.5.4**
-  - Updated dependencies
-- **Version 1.5.3**
-  - Updated dependencies
-
-### @abstract-foundation/web3-react-agw
-
-- **Version 1.4.2**
-  - Updated dependencies
-
-## Contribution Guidelines
-
-We encourage contributions to the Abstract Global Wallet SDK! Please follow the guidelines outlined in the [CONTRIBUTING.md](CONTRIBUTING.md) file for a smooth contribution process.
-
-### How to Contribute
-
-1. **Fork the Repository**: Create a personal copy of the repository.
-2. **Create a New Branch**: Use a descriptive name for your branch.
-3. **Make Your Changes**: Follow existing code styles and write clear commit messages.
-4. **Commit Your Changes**: Ensure your changes are well-tested.
-5. **Push to Your Fork**: Push your changes to GitHub.
-6. **Submit a Pull Request**: Provide a detailed description of your changes.
-
-## Reporting Bugs and Issues
-
-If you encounter any bugs or have feature suggestions, please report them using the GitHub Issues page. Include detailed information to help us address your concerns effectively.
+### `@abstract-foundation/web3-react-agw`
+- **Version**: Updated from `1.4.0` to `1.4.2`
+- **Changes**:
+  - Updated dependencies.
 
 ## Conclusion
 
-These updates to the Abstract Global Wallet SDK enhance its functionality and usability. We encourage developers to explore these changes and contribute to the ongoing improvement of the SDK. For more information, refer to the [full documentation](https://github.com/changesets/changesets).
+These updates to the Abstract Global Wallet SDK improve the handling of transaction data and provide greater flexibility in the provider configuration. Developers are encouraged to review these changes and adapt their implementations accordingly. For further details, please refer to the [full documentation](https://github.com/changesets/changesets).
+
+If you have any questions or need assistance, feel free to reach out through the GitHub Issues page or contribute to the project by following the [Contribution Guidelines](CONTRIBUTING.md).
