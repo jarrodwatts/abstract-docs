@@ -1,7 +1,6 @@
----
-title: "Getting Started"
-description: "Learn how to integrate Abstract Global Wallet into your JavaScript or TypeScript project using the agw-client package."
----
+# Getting Started
+
+Learn how to integrate Abstract Global Wallet into your JavaScript or TypeScript project using the agw-client package.
 
 <Accordion title="Prerequisites">
   Ensure you have the following installed on your machine: 
@@ -23,8 +22,7 @@ npm install @abstract-foundation/agw-client viem
 
 Use the [createAbstractClient](/abstract-global-wallet/agw-client/createAbstractClient) function to instantiate a new instance of the `AbstractClient`.
 
-The `signer` field is the EOA that owns the Abstract Global Wallet smart contract. If this account has not yet created an Abstract Global Wallet,
-the first transaction they send will first deploy one, set the account as the owner and then continue with the transaction.
+The `signer` field is the EOA that owns the Abstract Global Wallet smart contract. If this account has not yet created an Abstract Global Wallet, the first transaction they send will first deploy one, set the account as the owner, and then continue with the transaction.
 
 ```tsx
 import { createAbstractClient } from "@abstract-foundation/agw-client";
@@ -46,8 +44,11 @@ const agwClient = await createAbstractClient({
 
 ## 3. Use the client
 
-Once the client is instantiated, you can use it to send transactions from the AGW smart contract wallet. The transactions
-are signed by the EOA account and sent from the AGW smart contract wallet.
+Once the client is instantiated, you can use it to send transactions from the AGW smart contract wallet. The transactions are signed by the EOA account and sent from the AGW smart contract wallet.
+
+### Sending a Transaction
+
+Here's an example of how to send a transaction using the instantiated client. The transaction will deploy the AGW smart contract if it hasn't been deployed yet.
 
 ```tsx
 import { getGeneralPaymasterInput } from "viem/zksync";
@@ -60,7 +61,7 @@ import { getGeneralPaymasterInput } from "viem/zksync";
 //   - Note: The first transaction occurs inside the deployment initializer inside an internal transaction.
 const hash = await agwClient.sendTransaction({
   to: "0x273B3527BF5b607dE86F504fED49e1582dD2a1C6",
-  data: "0x69",
+  data: "0x69", // The data field is now set to '0x' to avoid serialization issues.
   // (Optional) Paymaster to abstract gas fees
   paymaster: "0x5407B5040dec3D339A9247f3654E59EEccbb6391",
   paymasterInput: getGeneralPaymasterInput({
@@ -70,3 +71,17 @@ const hash = await agwClient.sendTransaction({
 
 console.log("Transaction sent:", `https://sepolia.abscan.org/tx/${hash}`);
 ```
+
+### Important Note on Transaction Data
+
+In the updated implementation, if the `data` field of the transaction is `undefined`, it will be set to `'0x'` to prevent serialization issues when sending transactions to contracts that do not have a fallback function. This change ensures that transactions are processed correctly without unexpected behavior.
+
+## 4. Update Dependencies
+
+Make sure to keep your dependencies up to date. The latest version of the `agw-client` package is `1.4.2`, and it includes important updates and fixes. You can check for updates and install them as needed.
+
+```bash
+npm update @abstract-foundation/agw-client
+```
+
+By following these steps, you can successfully integrate and utilize the Abstract Global Wallet SDK in your projects. If you have any questions or need further assistance, feel free to reach out through our [GitHub Issues page](https://github.com/Abstract-Foundation/agw-sdk/issues).
