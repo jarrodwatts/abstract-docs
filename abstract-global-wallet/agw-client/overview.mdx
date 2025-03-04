@@ -1,20 +1,63 @@
+# agw-client
+
+## Overview
+
+The `agw-client` package exposes an [AbstractClient](/abstract-global-wallet/agw-client/createAbstractClient), built on top of the [Viem Wallet Client](https://viem.sh/docs/clients/wallet.html). This client allows you to deploy contracts, submit transactions, and more from the Abstract Global Wallet.
+
+All of the features of [Viem](https://viem.sh/) are available to you when using the `agw-client` package, in addition to many specific features for interacting with the Abstract Global Wallet directly.
+
+## New Features and Updates
+
+### Version 1.4.2
+
+- **Updated Dependencies**: The package has been updated to use the latest versions of its dependencies, including `viem` (now at version `2.22.23`), ensuring better performance and security.
+- **Transaction Handling**: A new safeguard has been added in the `signTransaction` function to prevent issues when sending transactions with undefined data. If the transaction data is undefined, it will now default to `'0x'`, avoiding serialization to `0x00`, which can cause issues when sending ETH to contracts without a fallback function.
+
+### Example Usage
+
+Here’s how you can use the `agw-client` to sign a transaction, ensuring that the data is correctly set:
+
+```javascript
+import { signEip712TransactionInternal } from '@abstract-foundation/agw-client';
+
+// Example transaction object
+const transaction = {
+  // ... other transaction properties
+  data: undefined, // This will be handled by the client
+};
+
+// Sign the transaction
+const signedTransaction = await signEip712TransactionInternal(transaction);
+console.log(signedTransaction);
+```
+
+### Version 1.5.4
+
+- **Updated Dependencies**: The `agw-react` package has also been updated to use the latest version of `@abstract-foundation/agw-client` (now at version `1.4.2`), ensuring compatibility and access to the latest features.
+
+### Example Usage in React
+
+When using the `agw-react` package, you can now optionally provide a `queryClient` in your provider configuration:
+
+```javascript
+import { AgwProvider } from '@abstract-foundation/agw-react';
+import { QueryClient } from 'react-query';
+
+const queryClient = new QueryClient();
+
+function App() {
+  return (
+    <AgwProvider queryClient={queryClient}>
+      {/* Your application components */}
+    </AgwProvider>
+  );
+}
+```
+
+## Learn More
+
+For more detailed information on how to use the `agw-client` package and its features, please refer to the [Viem Documentation](https://viem.sh/) and the [Abstract Global Wallet SDK documentation](https://github.com/Abstract-Foundation/agw-sdk).
+
 ---
-title: "agw-client"
-sidebarTitle: "Overview"
-description: "Learn how the agw-client package works and how to use it to interact with the Abstract Global Wallet."
-icon: "js"
----
 
-The `agw-client` package exposes an [AbstractClient](/abstract-global-wallet/agw-client/createAbstractClient),
-built on top of the [Viem Wallet Client](https://viem.sh/docs/clients/wallet.html)
-that allows you to deploy contracts, submit transactions, and more from the Abstract Global Wallet.
-
-All of the features of [Viem](https://viem.sh/) are available to you when using the `agw-client` package,
-in addition to many specific features for interacting with the Abstract Global Wallet directly.
-
-Learn more about Viem on the official documentation:
-
-<Card title="Viem Documentation" icon="book" href="https://viem.sh/">
-  Learn more about Viem and the available methods you can use to interact with
-  the Abstract Global Wallet.
-</Card>
+This documentation has been updated to reflect the latest changes in the `agw-client` package, ensuring that users have access to the most current information and examples for effective implementation.
