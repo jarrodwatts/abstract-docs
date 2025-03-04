@@ -1,11 +1,15 @@
----
-title: "signTransaction"
-description: Function to sign a transaction using the connected Abstract Global Wallet.
----
+# Updated Documentation for `signTransaction`
 
-The [AbstractClient](/abstract-global-wallet/agw-client/createAbstractClient)
-includes a `signTransaction` method that can be used to sign a transaction using the connected Abstract Global Wallet.
-Transactions are signed by the approved signer account (EOA) of the Abstract Global Wallet.
+## Overview
+
+The `signTransaction` method in the [AbstractClient](/abstract-global-wallet/agw-client/createAbstractClient) allows you to sign a transaction using the connected Abstract Global Wallet. Transactions are signed by the approved signer account (Externally Owned Account - EOA) of the Abstract Global Wallet.
+
+## Recent Changes
+
+### Version 1.4.2
+- **Patch Changes**: 
+  - Updated dependencies.
+  - Fixed an issue where undefined data in transactions would serialize to `0x00`, causing problems when sending ETH to contracts without a fallback function. The `data` field is now set to `'0x'` if it is undefined.
 
 ## Usage
 
@@ -20,7 +24,7 @@ export default function SignTransaction() {
 
     const signature = await agwClient.signTransaction({
       to: "0x273B3527BF5b607dE86F504fED49e1582dD2a1C6",
-      data: "0x69",
+      data: "0x69", // Example data
     });
   }
 }
@@ -33,15 +37,11 @@ export default function SignTransaction() {
 </ResponseField>
 
 <ResponseField name="from" type="Address">
-
-The sender address of the transaction.
-
-By default, this is set as the Abstract Global Wallet smart contract address.
-
+  The sender address of the transaction. By default, this is set as the Abstract Global Wallet smart contract address.
 </ResponseField>
 
 <ResponseField name="data" type="Hex | undefined">
-  Contract code or a hashed method call with encoded args.
+  Contract code or a hashed method call with encoded arguments. If not provided, it defaults to `'0x'` to prevent serialization issues.
 </ResponseField>
 
 <ResponseField name="gas" type="bigint | undefined">
@@ -49,11 +49,7 @@ By default, this is set as the Abstract Global Wallet smart contract address.
 </ResponseField>
 
 <ResponseField name="nonce" type="number | undefined">
-
-Unique number identifying this transaction.
-
-Learn more in the [handling nonces](/how-abstract-works/native-account-abstraction/handling-nonces) section.
-
+  Unique number identifying this transaction. Learn more in the [handling nonces](/how-abstract-works/native-account-abstraction/handling-nonces) section.
 </ResponseField>
 
 <ResponseField name="value" type="bigint | undefined">
@@ -77,23 +73,14 @@ Learn more in the [handling nonces](/how-abstract-works/native-account-abstracti
 </ResponseField>
 
 <ResponseField name="paymaster" type="Account | Address">
-
-Address of the
-[paymaster](/how-abstract-works/native-account-abstraction/paymasters) smart
-contract that will pay the gas fees of the transaction.
-
-Must also provide a `paymasterInput` field.
-
+  Address of the [paymaster](/how-abstract-works/native-account-abstraction/paymasters) smart contract that will pay the gas fees of the transaction. Must also provide a `paymasterInput` field.
 </ResponseField>
 
 <ResponseField name="paymasterInput" type="Hex">
-
-Input data to the **paymaster**.
-
-Must also provide a `paymaster` field.
+  Input data to the **paymaster**. Must also provide a `paymaster` field.
+</ResponseField>
 
 <Expandable title="Example">
-
 ```tsx
 import { agwClient } from "./config";
 import { getGeneralPaymasterInput } from "viem/zksync";
@@ -107,10 +94,7 @@ const signature = await agwClient.signTransaction({
   }),
 });
 ```
-
 </Expandable>
-
-</ResponseField>
 
 <ResponseField name="customSignature" type="Hex | undefined">
   Custom signature for the transaction.
@@ -123,3 +107,7 @@ const signature = await agwClient.signTransaction({
 ## Returns
 
 Returns a `Promise<string>` containing the signed serialized transaction.
+
+---
+
+This updated documentation reflects the recent changes made to the `signTransaction` method, ensuring that users are aware of the new handling for the `data` field and providing practical examples for better understanding.
