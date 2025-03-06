@@ -123,3 +123,6 @@ const signature = await agwClient.signTransaction({
 ## Returns
 
 Returns a `Promise<string>` containing the signed serialized transaction.
+
+### Important Note
+If the `transactionWithPaymaster.data` is undefined, it will be set to '0x' to avoid issues sending ETH to contracts that don't have a fallback function.
